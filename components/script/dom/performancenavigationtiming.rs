@@ -7,7 +7,7 @@ use dom::bindings::codegen::Bindings::PerformanceNavigationTimingBinding;
 use dom::bindings::codegen::Bindings::PerformanceNavigationTimingBinding::{PerformanceNavigationTimingMethods, NavigationType};
 use dom::bindings::codegen::Bindings::WindowBinding::WindowMethods;
 use dom::bindings::num::Finite;
-use dom::bindings::reflector::{Reflector, reflect_dom_object};
+use dom::bindings::reflector::reflect_dom_object;
 use dom::bindings::root::{Dom, DomRoot};
 use dom::bindings::str::DOMString;
 use dom::document::Document;
@@ -18,9 +18,8 @@ use dom_struct::dom_struct;
 #[dom_struct]
  // https://w3c.github.io/navigation-timing/#dom-performancenavigationtiming
 pub struct PerformanceNavigationTiming {
-    reflector_: Reflector,
     // https://w3c.github.io/navigation-timing/#PerformanceResourceTiming
-    resource_timing: Dom<PerformanceResourceTiming>,
+    performanceresourcetiming: PerformanceResourceTiming,
     navigation_start: u64,
     navigation_start_precise: u64,
     document: Dom<Document>,
@@ -33,31 +32,16 @@ impl PerformanceNavigationTiming {
                      document: &Document)
                          -> PerformanceNavigationTiming {
         PerformanceNavigationTiming {
-            resource_timing: Dom::from_ref(&*PerformanceResourceTiming::new(
-                document.window(),
+            performanceresourcetiming: PerformanceResourceTiming::new_inherited(
                 document.url(),
                 DOMString::from("navigation"),
                 None,
-                nav_start_precise as f64)),
-            reflector_: Reflector::new(),
+                nav_start_precise as f64),
             navigation_start: nav_start,
             navigation_start_precise: nav_start_precise,
             document: Dom::from_ref(document),
             nav_type: NavigationType::Navigate
         }
-    }
-
-    #[allow(unrooted_must_root)]
-    pub fn new(window: &Window,
-               navigation_start: u64,
-               navigation_start_precise: u64)
-               -> DomRoot<PerformanceNavigationTiming> {
-        let timing = PerformanceNavigationTiming::new_inherited(navigation_start,
-                                                      navigation_start_precise,
-                                                      &window.Document());
-        reflect_dom_object(Box::new(timing),
-                           window,
-                           PerformanceNavigationTimingBinding::Wrap)
     }
 
     pub fn set_type(&mut self, nav_type: NavigationType) {

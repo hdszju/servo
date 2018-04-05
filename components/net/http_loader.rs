@@ -54,6 +54,7 @@ use time;
 use time::Tm;
 use unicase::UniCase;
 use uuid;
+use time::precise_time_ns;
 
 fn read_block<R: Read>(reader: &mut R) -> Result<Data, ()> {
     let mut buf = vec![0; 32768];
@@ -418,8 +419,10 @@ fn obtain_response(connector: &Pool<Connector>,
             info!("{:?}", data);
         }
 
+        // TODO avada: connect start and connect end are supposed to be the tcp step, not request/response
         let connect_start = precise_time_ms();
 
+        println!("request start is {}", precise_time_ns());
         let request = HyperRequest::with_connector(method.clone(),
                                                    url.clone().into_url(),
                                                    &*connector);
@@ -444,6 +447,8 @@ fn obtain_response(connector: &Pool<Connector>,
             }
         }
 
+        // TODO avada: responsestart should be time immediately after receiving first byte of response
+        println!("response start is {}", precise_time_ns());
         let response = match request_writer.send() {
             Ok(w) => w,
             Err(HttpError::Io(ref io_error))
@@ -454,6 +459,7 @@ fn obtain_response(connector: &Pool<Connector>,
             },
             Err(e) => return Err(NetworkError::Internal(e.description().to_owned())),
         };
+        println!("response end is {}", precise_time_ns());
 
         let send_end = precise_time_ms();
 
@@ -871,6 +877,7 @@ fn http_network_or_cache_fetch(request: &mut Request,
     let mut revalidating_flag = false;
 
     // Step 21
+    println!("querying cache at {}", precise_time_ns());
     if let Ok(http_cache) = context.state.http_cache.read() {
         if let Some(response_from_cache) = http_cache.construct_response(&http_request, done_chan) {
             let response_headers = response_from_cache.response.headers.clone();

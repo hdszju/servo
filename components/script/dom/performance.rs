@@ -9,9 +9,10 @@ use dom::bindings::codegen::Bindings::PerformanceBinding::PerformanceEntryList a
 use dom::bindings::error::{Error, Fallible};
 use dom::bindings::inheritance::Castable;
 use dom::bindings::num::Finite;
-use dom::bindings::reflector::{DomObject, Reflector, reflect_dom_object};
+use dom::bindings::reflector::{DomObject, reflect_dom_object};
 use dom::bindings::root::DomRoot;
 use dom::bindings::str::DOMString;
+use dom::eventtarget::EventTarget;
 use dom::globalscope::GlobalScope;
 use dom::performanceentry::PerformanceEntry;
 use dom::performancemark::PerformanceMark;
@@ -109,7 +110,7 @@ struct PerformanceObserver {
 
 #[dom_struct]
 pub struct Performance {
-    reflector_: Reflector,
+    eventtarget: EventTarget,
     entries: DomRefCell<PerformanceEntryList>,
     observers: DomRefCell<Vec<PerformanceObserver>>,
     pending_notification_observers_task: Cell<bool>,
@@ -120,7 +121,7 @@ impl Performance {
     fn new_inherited(global: &GlobalScope,
                      navigation_start_precise: u64) -> Performance {
         Performance {
-            reflector_: Reflector::new(),
+            eventtarget: EventTarget::new_inherited(),
             entries: DomRefCell::new(PerformanceEntryList::new(Vec::new())),
             observers: DomRefCell::new(Vec::new()),
             pending_notification_observers_task: Cell::new(false),

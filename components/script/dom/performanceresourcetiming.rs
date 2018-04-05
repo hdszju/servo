@@ -8,7 +8,7 @@ use dom::bindings::inheritance::Castable;
 use dom::bindings::root::{Dom, DomRoot};
 use dom::bindings::str::DOMString;
 use dom::bindings::num::Finite;
-use dom::bindings::reflector::{Reflector, reflect_dom_object};
+use dom::bindings::reflector::reflect_dom_object;
 use dom::globalscope::GlobalScope;
 use dom::performanceentry::PerformanceEntry;
 use dom::window::Window;
@@ -24,8 +24,7 @@ use servo_url::ServoUrl;
 
 #[dom_struct]
 pub struct PerformanceResourceTiming {
-    reflector_: Reflector,
-	entry: Dom<PerformanceEntry>,
+	entry: PerformanceEntry,
     initiator_type: DOMString,
     next_hop: Option<DOMString>,
     worker_start: f64,
@@ -45,22 +44,22 @@ pub struct PerformanceResourceTiming {
     // decoded_body_size: f64, //size in octets
 }
 
+#[allow(unsafe_code)]
+unsafe impl Send for PerformanceResourceTiming {}
+
 impl PerformanceResourceTiming {
-    fn new_inherited(global: &GlobalScope,
-    				 url: ServoUrl,
+    pub fn new_inherited(url: ServoUrl,
     				 initiator_type: DOMString,
                      next_hop: Option<DOMString>,
                      fetch_start: f64)
                          -> PerformanceResourceTiming {
         // TODO Do i know the end time yet?
         PerformanceResourceTiming {
-        	entry: Dom::from_ref(&*PerformanceEntry::new(
-        		global,
+        	entry: PerformanceEntry::new_inherited(
         		DOMString::from(url.into_string()),
         		DOMString::from("resource"),
         		fetch_start,
-        		0.)),
-            reflector_: Reflector::new(),
+                0.),
             initiator_type: initiator_type,
             next_hop: next_hop,
             worker_start: 0.,
@@ -76,20 +75,6 @@ impl PerformanceResourceTiming {
             response_start: 0.,
             response_end: 0.,
         }
-    }
-
-    #[allow(unrooted_must_root)]
-    pub fn new(window: &Window,
-               url: ServoUrl,
-               initiator_type: DOMString,
-               next_hop: Option<DOMString>,
-               fetch_start: f64)
-               -> DomRoot<PerformanceResourceTiming> {
-        let global_scope = window.upcast::<GlobalScope>();
-        let timing = PerformanceResourceTiming::new_inherited(global_scope, url, initiator_type, next_hop, fetch_start);
-        reflect_dom_object(Box::new(timing),
-                           window,
-                           PerformanceResourceTimingBinding::Wrap)
     }
 
     // TODO prevent setting start if it's already been set?
