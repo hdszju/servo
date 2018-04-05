@@ -11773,6 +11773,11 @@
      {}
     ]
    ],
+   "mozilla/window_resource_performance.html": [
+    [
+     {}
+    ]
+   ],
    "mozilla/worklets/syntax_error.js": [
     [
      {}
@@ -61533,7 +61538,7 @@
    "support"
   ],
   "css/get-computed-style-for-url.html": [
-   "2e90c0abd6c83bb11113f39a557a4c1c1c24364b",
+   "cb3b467160026d20c4e283c12ded20fe2d025f88",
    "testharness"
   ],
   "css/green.png": [
@@ -70971,6 +70976,10 @@
   "mozilla/window_resize_not_triggered_on_load.html": [
    "2170a71432a48dab66eae049e027b75e731468f5",
    "testharness"
+  ],
+  "mozilla/window_resource_performance.html": [
+   "a65283432f6939aefcf1127be1a372efeae7da73",
+   "support"
   ],
   "mozilla/window_setInterval.html": [
    "186923778bd11cdbd4743fadb86f5e2ea4f29fdf",

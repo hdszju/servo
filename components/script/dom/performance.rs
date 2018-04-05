@@ -118,8 +118,7 @@ pub struct Performance {
 }
 
 impl Performance {
-    fn new_inherited(global: &GlobalScope,
-                     navigation_start_precise: u64) -> Performance {
+    fn new_inherited(navigation_start_precise: u64) -> Performance {
         Performance {
             eventtarget: EventTarget::new_inherited(),
             entries: DomRefCell::new(PerformanceEntryList::new(Vec::new())),
