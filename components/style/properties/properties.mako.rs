@@ -1645,6 +1645,12 @@ impl PropertyId {
         }
     }
 
+    /// Returns true if the property is a shorthand or shorthand alias.
+    #[inline]
+    pub fn is_shorthand(&self) -> bool {
+        self.as_shorthand().is_ok()
+    }
+
     /// Given this property id, get it either as a shorthand or as a
     /// `PropertyDeclarationId`.
     pub fn as_shorthand(&self) -> Result<ShorthandId, PropertyDeclarationId> {
@@ -2416,10 +2422,11 @@ pub struct ComputedValuesInner {
 pub struct ComputedValues {
     /// The actual computed values
     ///
-    /// In Gecko the outer ComputedValues is actually a style context,
-    /// whereas ComputedValuesInner is the core set of computed values.
+    /// In Gecko the outer ComputedValues is actually a ComputedStyle, whereas
+    /// ComputedValuesInner is the core set of computed values.
     ///
-    /// We maintain this distinction in servo to reduce the amount of special casing.
+    /// We maintain this distinction in servo to reduce the amount of special
+    /// casing.
     inner: ComputedValuesInner,
 }
 

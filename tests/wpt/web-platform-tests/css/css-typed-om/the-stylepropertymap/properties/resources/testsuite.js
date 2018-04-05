@@ -152,6 +152,13 @@ const gTestSyntaxExamples = {
       }
     ],
   },
+  '<url>': {
+    description: 'a URL',
+    examples: [
+      // TODO(https://github.com/w3c/css-houdini-drafts/issues/716):
+      // We can't test this until CSSURLValue is spec'd.
+    ],
+  },
   '<transform>': {
     description: 'a transform',
     examples: [
@@ -352,7 +359,7 @@ function runPropertyTests(propertyName, testCases) {
 
     // Retrieve test examples for this test case's syntax. If the syntax
     // looks like a keyword, then create an example on the fly.
-    const syntaxExamples = testCase.syntax.match(/^[a-z\-]+$/) ?
+    const syntaxExamples = testCase.syntax.toLowerCase().match(/^[a-z\-]+$/) ?
       createKeywordExample(testCase.syntax) :
       gTestSyntaxExamples[testCase.syntax];
 
@@ -376,6 +383,12 @@ function runPropertyTests(propertyName, testCases) {
         syntaxExamples.description);
     }
   }
+}
+
+// Same as runPropertyTests but for list-valued properties.
+function runListValuedPropertyTests(propertyName, testCases) {
+  // TODO(https://crbug.com/545318): Run list-valued tests as well.
+  runPropertyTests(propertyName, testCases);
 }
 
 // Check that |propertyName| doesn't "support" examples in |testExamples|.

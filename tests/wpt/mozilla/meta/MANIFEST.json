@@ -11593,11 +11593,6 @@
      {}
     ]
    ],
-   "mozilla/resources/content.py": [
-    [
-     {}
-    ]
-   ],
    "mozilla/resources/external.js": [
     [
      {}
@@ -31972,6 +31967,12 @@
      {}
     ]
    ],
+   "mozilla/codegen_unions.html": [
+    [
+     "/_mozilla/mozilla/codegen_unions.html",
+     {}
+    ]
+   ],
    "mozilla/collections.html": [
     [
      "/_mozilla/mozilla/collections.html",
@@ -39087,18 +39088,6 @@
    "mozilla/secure.https.html": [
     [
      "/_mozilla/mozilla/secure.https.html",
-     {}
-    ]
-   ],
-   "mozilla/send-arraybuffer.htm": [
-    [
-     "/_mozilla/mozilla/send-arraybuffer.htm",
-     {}
-    ]
-   ],
-   "mozilla/send-blob.htm": [
-    [
-     "/_mozilla/mozilla/send-blob.htm",
      {}
     ]
    ],
@@ -59856,7 +59845,7 @@
    "testharness"
   ],
   "bluetooth/writeValue/characteristic/write-updates-value.html": [
-   "7f7366bc66c31db8716ae84613d876b4b7f62626",
+   "3c67dbbdf28c71dcba42b0422885937f0a737864",
    "testharness"
   ],
   "bluetooth/writeValue/descriptor/blocklisted-descriptor.html": [
@@ -59888,7 +59877,7 @@
    "testharness"
   ],
   "bluetooth/writeValue/descriptor/write-updates-value.html": [
-   "d92db44be1e1f4720337cb38acc7eea3f34abadd",
+   "2c71ee45a923996bd4a80c063e7761d7c28ac18d",
    "testharness"
   ],
   "css/100x100_green.png": [
@@ -64749,6 +64738,10 @@
   ],
   "mozilla/client-top-left-height-width.html": [
    "5183977a0d29ba4d74d049c9391090e3c27264a8",
+   "testharness"
+  ],
+  "mozilla/codegen_unions.html": [
+   "7f772fffb75acc92f9c949a482d387b3ed18d0ed",
    "testharness"
   ],
   "mozilla/collections.html": [
@@ -70603,10 +70596,6 @@
    "1a76b81400b1e150f008d11180adcdf786e77b67",
    "support"
   ],
-  "mozilla/resources/content.py": [
-   "5cf25421cc9c0e0f88a159b363f99f37036d019f",
-   "support"
-  ],
   "mozilla/resources/external.js": [
    "78686147f85e4146e7fc58c1f67a613f65b099a2",
    "support"
@@ -70693,14 +70682,6 @@
   ],
   "mozilla/secure.https.html": [
    "fc757effccd93c56ab79b0510a01ae815b7a8714",
-   "testharness"
-  ],
-  "mozilla/send-arraybuffer.htm": [
-   "dc04c6f888458b28bd29a3a43f4dab7f12e72a33",
-   "testharness"
-  ],
-  "mozilla/send-blob.htm": [
-   "5d8d62c0c2c27edbb875183a31a9005c950141cc",
    "testharness"
   ],
   "mozilla/sequence-hole.html": [

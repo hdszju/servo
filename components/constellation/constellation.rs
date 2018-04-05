@@ -95,6 +95,7 @@ use browsingcontext::{BrowsingContext, SessionHistoryChange, SessionHistoryEntry
 use browsingcontext::{FullyActiveBrowsingContextsIterator, AllBrowsingContextsIterator};
 use canvas::canvas_paint_thread::CanvasPaintThread;
 use canvas::webgl_thread::WebGLThreads;
+use canvas_traits::canvas::CanvasId;
 use canvas_traits::canvas::CanvasMsg;
 use clipboard::{ClipboardContext, ClipboardProvider};
 use compositing::SendableFrameTree;
@@ -111,7 +112,7 @@ use ipc_channel::ipc::{self, IpcSender, IpcReceiver};
 use ipc_channel::router::ROUTER;
 use itertools::Itertools;
 use layout_traits::LayoutThreadFactory;
-use log::{Log, LogLevel, LogLevelFilter, LogMetadata, LogRecord};
+use log::{Log, Level, LevelFilter, Metadata, Record};
 use msg::constellation_msg::{BrowsingContextId, TopLevelBrowsingContextId, PipelineId};
 use msg::constellation_msg::{Key, KeyModifiers, KeyState};
 use msg::constellation_msg::{PipelineNamespace, PipelineNamespaceId, TraversalDirection};
@@ -329,6 +330,9 @@ pub struct Constellation<Message, LTF, STF> {
 
     /// A channel through which messages can be sent to the webvr thread.
     webvr_chan: Option<IpcSender<WebVRMsg>>,
+
+    /// An Id for the next canvas to use.
+    canvas_id: CanvasId,
 }
 
 /// State needed to construct a constellation.
@@ -438,17 +442,17 @@ impl FromScriptLogger {
     }
 
     /// The maximum log level the constellation logger is interested in.
-    pub fn filter(&self) -> LogLevelFilter {
-        LogLevelFilter::Warn
+    pub fn filter(&self) -> LevelFilter {
+        LevelFilter::Warn
     }
 }
 
 impl Log for FromScriptLogger {
-    fn enabled(&self, metadata: &LogMetadata) -> bool {
-        metadata.level() <= LogLevel::Warn
+    fn enabled(&self, metadata: &Metadata) -> bool {
+        metadata.level() <= Level::Warn
     }
 
-    fn log(&self, record: &LogRecord) {
+    fn log(&self, record: &Record) {
         if let Some(entry) = log_entry(record) {
             debug!("Sending log entry {:?}.", entry);
             let thread_name = thread::current().name().map(ToOwned::to_owned);
@@ -457,6 +461,8 @@ impl Log for FromScriptLogger {
             let _ = chan.send(msg);
         }
     }
+
+    fn flush(&self) {}
 }
 
 /// A logger directed at the constellation from the compositor
@@ -475,17 +481,17 @@ impl FromCompositorLogger {
     }
 
     /// The maximum log level the constellation logger is interested in.
-    pub fn filter(&self) -> LogLevelFilter {
-        LogLevelFilter::Warn
+    pub fn filter(&self) -> LevelFilter {
+        LevelFilter::Warn
     }
 }
 
 impl Log for FromCompositorLogger {
-    fn enabled(&self, metadata: &LogMetadata) -> bool {
-        metadata.level() <= LogLevel::Warn
+    fn enabled(&self, metadata: &Metadata) -> bool {
+        metadata.level() <= Level::Warn
     }
 
-    fn log(&self, record: &LogRecord) {
+    fn log(&self, record: &Record) {
         if let Some(entry) = log_entry(record) {
             debug!("Sending log entry {:?}.", entry);
             let top_level_id = TopLevelBrowsingContextId::installed();
@@ -495,22 +501,24 @@ impl Log for FromCompositorLogger {
             let _ = chan.send(msg);
         }
     }
+
+    fn flush(&self) {}
 }
 
-/// Rust uses `LogRecord` for storing logging, but servo converts that to
+/// Rust uses `Record` for storing logging, but servo converts that to
 /// a `LogEntry`. We do this so that we can record panics as well as log
-/// messages, and because `LogRecord` does not implement serde (de)serialization,
+/// messages, and because `Record` does not implement serde (de)serialization,
 /// so cannot be used over an IPC channel.
-fn log_entry(record: &LogRecord) -> Option<LogEntry> {
+fn log_entry(record: &Record) -> Option<LogEntry> {
     match record.level() {
-        LogLevel::Error if thread::panicking() => Some(LogEntry::Panic(
+        Level::Error if thread::panicking() => Some(LogEntry::Panic(
             format!("{}", record.args()),
             format!("{:?}", Backtrace::new())
         )),
-        LogLevel::Error => Some(LogEntry::Error(
+        Level::Error => Some(LogEntry::Error(
             format!("{}", record.args())
         )),
-        LogLevel::Warn => Some(LogEntry::Warn(
+        Level::Warn => Some(LogEntry::Warn(
             format!("{}", record.args())
         )),
         _ => None,
@@ -622,6 +630,7 @@ impl<Message, LTF, STF> Constellation<Message, LTF, STF>
                 }),
                 webgl_threads: state.webgl_threads,
                 webvr_chan: state.webvr_chan,
+                canvas_id: CanvasId(0),
             };
 
             constellation.run();
@@ -1229,9 +1238,6 @@ impl<Message, LTF, STF> Constellation<Message, LTF, STF>
                 debug!("constellation got Alert message");
                 self.handle_alert(source_top_ctx_id, message, sender);
             }
-            FromScriptMsg::GetClientWindow(send) => {
-                self.embedder_proxy.send(EmbedderMsg::GetClientWindow(source_top_ctx_id, send));
-            }
 
             FromScriptMsg::MoveTo(point) => {
                 self.embedder_proxy.send(EmbedderMsg::MoveTo(source_top_ctx_id, point));
@@ -1241,12 +1247,14 @@ impl<Message, LTF, STF> Constellation<Message, LTF, STF>
                 self.embedder_proxy.send(EmbedderMsg::ResizeTo(source_top_ctx_id, size));
             }
 
-            FromScriptMsg::GetScreenSize(send) => {
-                self.embedder_proxy.send(EmbedderMsg::GetScreenSize(source_top_ctx_id, send));
+            FromScriptMsg::GetClientWindow(send) => {
+                self.compositor_proxy.send(ToCompositorMsg::GetClientWindow(send));
             }
-
+            FromScriptMsg::GetScreenSize(send) => {
+                self.compositor_proxy.send(ToCompositorMsg::GetScreenSize(send));
+            }
             FromScriptMsg::GetScreenAvailSize(send) => {
-                self.embedder_proxy.send(EmbedderMsg::GetScreenAvailSize(source_top_ctx_id, send));
+                self.compositor_proxy.send(ToCompositorMsg::GetScreenAvailSize(send));
             }
 
             FromScriptMsg::Exit => {
@@ -2200,11 +2208,12 @@ impl<Message, LTF, STF> Constellation<Message, LTF, STF>
     fn handle_create_canvas_paint_thread_msg(
             &mut self,
             size: &Size2D<i32>,
-            response_sender: IpcSender<IpcSender<CanvasMsg>>) {
+            response_sender: IpcSender<(IpcSender<CanvasMsg>, CanvasId)>) {
+        self.canvas_id.0 += 1;
         let webrender_api = self.webrender_api_sender.clone();
         let sender = CanvasPaintThread::start(*size, webrender_api,
-                                              opts::get().enable_canvas_antialiasing);
-        if let Err(e) = response_sender.send(sender) {
+                                              opts::get().enable_canvas_antialiasing, self.canvas_id.clone());
+        if let Err(e) = response_sender.send((sender, self.canvas_id.clone())) {
             warn!("Create canvas paint thread response failed ({})", e);
         }
     }
