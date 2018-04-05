@@ -3,16 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 use dom::bindings::codegen::Bindings::PerformanceBinding::DOMHighResTimeStamp;
-use dom::bindings::codegen::Bindings::PerformanceNavigationTimingBinding;
 use dom::bindings::codegen::Bindings::PerformanceNavigationTimingBinding::{PerformanceNavigationTimingMethods, NavigationType};
-use dom::bindings::codegen::Bindings::WindowBinding::WindowMethods;
 use dom::bindings::num::Finite;
-use dom::bindings::reflector::reflect_dom_object;
-use dom::bindings::root::{Dom, DomRoot};
+use dom::bindings::root::Dom;
 use dom::bindings::str::DOMString;
 use dom::document::Document;
 use dom::performanceresourcetiming::PerformanceResourceTiming;
-use dom::window::Window;
 use dom_struct::dom_struct;
 
 #[dom_struct]

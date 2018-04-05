@@ -3,15 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 use dom::bindings::codegen::Bindings::PerformanceBinding::DOMHighResTimeStamp;
-use dom::bindings::codegen::Bindings::PerformanceResourceTimingBinding::{self, PerformanceResourceTimingMethods};
-use dom::bindings::inheritance::Castable;
-use dom::bindings::root::{Dom, DomRoot};
+use dom::bindings::codegen::Bindings::PerformanceResourceTimingBinding::PerformanceResourceTimingMethods;
 use dom::bindings::str::DOMString;
 use dom::bindings::num::Finite;
-use dom::bindings::reflector::reflect_dom_object;
-use dom::globalscope::GlobalScope;
 use dom::performanceentry::PerformanceEntry;
-use dom::window::Window;
 use dom_struct::dom_struct;
 use servo_url::ServoUrl;
 

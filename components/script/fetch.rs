@@ -14,7 +14,6 @@ use dom::bindings::root::DomRoot;
 use dom::bindings::trace::RootedTraceableBox;
 use dom::globalscope::GlobalScope;
 use dom::headers::Guard;
-use dom::performanceresourcetiming::PerformanceResourceTiming;
 use dom::promise::Promise;
 use dom::request::Request;
 use dom::response::Response;
