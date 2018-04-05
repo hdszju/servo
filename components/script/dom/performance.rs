@@ -131,7 +131,7 @@ impl Performance {
     pub fn new(global: &GlobalScope,
                navigation_start_precise: u64) -> DomRoot<Performance> {
         reflect_dom_object(
-            Box::new(Performance::new_inherited(global, navigation_start_precise)),
+            Box::new(Performance::new_inherited(navigation_start_precise)),
             global,
             PerformanceBinding::Wrap
         )
