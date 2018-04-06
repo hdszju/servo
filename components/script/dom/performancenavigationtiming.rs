@@ -1,6 +1,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+#![allow(unused)]
 
 use dom::bindings::codegen::Bindings::PerformanceBinding::DOMHighResTimeStamp;
 use dom::bindings::codegen::Bindings::PerformanceNavigationTimingBinding::{PerformanceNavigationTimingMethods, NavigationType};
@@ -10,6 +11,7 @@ use dom::bindings::str::DOMString;
 use dom::document::Document;
 use dom::performanceresourcetiming::PerformanceResourceTiming;
 use dom_struct::dom_struct;
+
 
 #[dom_struct]
  // https://w3c.github.io/navigation-timing/#dom-performancenavigationtiming

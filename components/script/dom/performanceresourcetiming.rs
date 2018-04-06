@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#![allow(unused)]
+
 use dom::bindings::codegen::Bindings::PerformanceBinding::DOMHighResTimeStamp;
 use dom::bindings::codegen::Bindings::PerformanceResourceTimingBinding::PerformanceResourceTimingMethods;
 use dom::bindings::str::DOMString;
@@ -16,6 +18,7 @@ use servo_url::ServoUrl;
 // 
 // TODO Cross origin resources MUST BE INCLUDED as PerformanceResourceTiming objects
 // https://w3c.github.io/resource-timing/#sec-cross-origin-resources
+
 
 #[dom_struct]
 pub struct PerformanceResourceTiming {
