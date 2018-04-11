@@ -4,7 +4,8 @@
 #![allow(unused)]
 
 use dom::bindings::codegen::Bindings::PerformanceBinding::DOMHighResTimeStamp;
-use dom::bindings::codegen::Bindings::PerformanceNavigationTimingBinding::{PerformanceNavigationTimingMethods, NavigationType};
+use dom::bindings::codegen::Bindings::PerformanceNavigationTimingBinding::NavigationType;
+use dom::bindings::codegen::Bindings::PerformanceNavigationTimingBinding::PerformanceNavigationTimingMethods;
 use dom::bindings::num::Finite;
 use dom::bindings::root::Dom;
 use dom::bindings::str::DOMString;
@@ -14,7 +15,7 @@ use dom_struct::dom_struct;
 
 
 #[dom_struct]
- // https://w3c.github.io/navigation-timing/#dom-performancenavigationtiming
+// https://w3c.github.io/navigation-timing/#dom-performancenavigationtiming
 pub struct PerformanceNavigationTiming {
     // https://w3c.github.io/navigation-timing/#PerformanceResourceTiming
     performanceresourcetiming: PerformanceResourceTiming,
