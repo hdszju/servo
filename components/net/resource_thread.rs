@@ -44,9 +44,9 @@ use std::sync::{Arc, Mutex, RwLock};
 use std::sync::mpsc::Sender;
 use std::thread;
 use storage_thread::StorageThreadFactory;
+use time::precise_time_ns;
 use websocket_loader;
 
-use time::precise_time_ns;
 
 const TFD_PROVIDER: &'static TFDProvider = &TFDProvider;
 

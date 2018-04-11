@@ -37,7 +37,7 @@ pub struct PerformanceResourceTiming {
     request_start: f64,
     response_start: f64,
     response_end: f64,
-    // transfer_size: f64,	//size in octets
+    // transfer_size: f64, //size in octets
     // encoded_body_size: f64, //size in octets
     // decoded_body_size: f64, //size in octets
 }

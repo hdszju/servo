@@ -50,11 +50,10 @@ use std::str::FromStr;
 use std::sync::RwLock;
 use std::sync::mpsc::{channel, Sender};
 use std::thread;
-use time;
+use time::{self, precise_time_ns};
 use time::Tm;
 use unicase::UniCase;
 use uuid;
-use time::precise_time_ns;
 
 fn read_block<R: Read>(reader: &mut R) -> Result<Data, ()> {
     let mut buf = vec![0; 32768];
