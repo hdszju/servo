@@ -1528,6 +1528,8 @@ impl Document {
         debug!("Document got finish_load: {:?}", load);
         self.loader.borrow_mut().finish_load(&load);
 
+        //TODO avada conclude PerformanceNavigationTiming here?
+
         match load {
             LoadType::Stylesheet(_) => {
                 // A stylesheet finishing to load may unblock any pending
@@ -3718,6 +3720,7 @@ impl DocumentMethods for Document {
 
         // Step 10.
         // TODO: prompt to unload.
+        println!("prompt for unload");
 
         window_from_node(self).set_navigation_start();
 

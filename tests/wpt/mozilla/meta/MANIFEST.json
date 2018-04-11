@@ -6263,7 +6263,7 @@
      [
       [
        "/_mozilla/css/transform_3d_from_outside_viewport_ref.html",
-       "!="
+       "=="
       ]
      ],
      {}
@@ -11769,6 +11769,11 @@
     ]
    ],
    "mozilla/webgl/tex_image_2d_simple_ref.html": [
+    [
+     {}
+    ]
+   ],
+   "mozilla/window_resource_performance.html": [
     [
      {}
     ]
@@ -70953,7 +70958,7 @@
    "testharness"
   ],
   "mozilla/window_performance.html": [
-   "f03283e68b82d972ad21f674243070643ef89489",
+   "2d0fb33d9857e29dd49eb2b4fd2e22df7cd3ba32",
    "testharness"
   ],
   "mozilla/window_performance_topLevelDomComplete.html": [
@@ -70971,6 +70976,10 @@
   "mozilla/window_resize_not_triggered_on_load.html": [
    "2170a71432a48dab66eae049e027b75e731468f5",
    "testharness"
+  ],
+  "mozilla/window_resource_performance.html": [
+   "a65283432f6939aefcf1127be1a372efeae7da73",
+   "support"
   ],
   "mozilla/window_setInterval.html": [
    "186923778bd11cdbd4743fadb86f5e2ea4f29fdf",
